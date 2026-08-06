@@ -1,9 +1,13 @@
 #ifdef _WIN32
+#define NOMINMAX // Р—Р°РїСЂРµС‚ РЅР° РѕР±СЉСЏРІР»РµРЅРёРµ РјР°РєСЂРѕСЃРѕРІ min Рё max
 #include <Windows.h>
 #endif
 
-#include <iostream>
 #include <chrono>
+#include <cstdlib>
+#include <iostream>
+#include <limits>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -18,7 +22,7 @@ public:
 	{
 	}
 
-	Note(string text)
+	explicit Note(string text)
 		: created_at(system_clock::now()),
 		id(++count),
 		text(text)
@@ -27,10 +31,10 @@ public:
 
 	void GetInfo() const
 	{
-		cout << "Информация о заметке:" << endl
-			<< "Время создания: " << created_at << endl
+		cout << "РРЅС„РѕСЂРјР°С†РёСЏ Рѕ Р·Р°РјРµС‚РєРµ:" << endl
+			<< "Р’СЂРµРјСЏ СЃРѕР·РґР°РЅРёСЏ: " << created_at << endl
 			<< "id: " << id << endl
-			<< "Текст: " << text << endl
+			<< "РўРµРєСЃС‚: " << text << endl
 			<< endl;
 	}
 
@@ -41,12 +45,10 @@ private:
 	string text;
 	static int count;
 
-	// для UI format("{:%d.%m.%Y %H:%M}", now_local);
+	// РґР»СЏ UI format("{:%d.%m.%Y %H:%M}", now_local);
 };
 
 int Note::count = 0;
-
-enum state { off, on };
 
 enum commands { exit_program, add_new_note, show_list_notes };
 
@@ -61,24 +63,30 @@ void printHeader()
 
 void printMenu()
 {
-	cout << "1 - Добавить новую заметку" << endl;
-	cout << "2 - Просмотреть список заметок" << endl;
-	cout << "0 - Закрыть Forge" << endl << endl;
+	cout << "1 - Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІСѓСЋ Р·Р°РјРµС‚РєСѓ" << endl;
+	cout << "2 - РџСЂРѕСЃРјРѕС‚СЂРµС‚СЊ СЃРїРёСЃРѕРє Р·Р°РјРµС‚РѕРє" << endl;
+	cout << "0 - Р—Р°РєСЂС‹С‚СЊ Forge" << endl << endl;
 }
 
 void addNewNote(vector<Note> &notesList)
 {
 	string text_note;
-	cout << "Введите текст новой заметки: " << endl;
+	cout << "Р’РІРµРґРёС‚Рµ С‚РµРєСЃС‚ РЅРѕРІРѕР№ Р·Р°РјРµС‚РєРё: " << endl;
 
 	getline(cin >> ws, text_note);
 
-	notesList.push_back(text_note);
+	notesList.emplace_back(text_note);
 }
 
 void showListNotes(const vector<Note>& notesList)
 {
-	cout << "Список заметок:" << endl << endl;
+	cout << "РЎРїРёСЃРѕРє Р·Р°РјРµС‚РѕРє:" << endl << endl;
+
+	if (notesList.empty())
+	{
+		cout << "Р—Р°РјРµС‚РѕРє РїРѕРєР° РЅРµС‚" << endl << endl;
+		return;
+	}
 
 	for (const Note &note : notesList)
 	{
@@ -90,8 +98,8 @@ void showListNotes(const vector<Note>& notesList)
 int main()
 {
 	#ifdef _WIN32
-    SetConsoleCP(1251); // Установить кодировку для ввода
-    SetConsoleOutputCP(1251); // Установить кодировку для вывода
+    SetConsoleCP(1251); // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РєРѕРґРёСЂРѕРІРєСѓ РґР»СЏ РІРІРѕРґР°
+    SetConsoleOutputCP(1251); // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РєРѕРґРёСЂРѕРІРєСѓ РґР»СЏ РІС‹РІРѕРґР°
 	#endif
 
 	system("cls");
@@ -100,27 +108,41 @@ int main()
 
 	vector<Note> notesList;
 
-	int state = state::on;
+	bool isRunning = true;
 
-	int user_command;
-
-	while (state)
+	while (isRunning)
 	{
-		cin >> user_command;
+		int userCommand = 0;
 
-		if (cin.fail())
+		if (!(cin >> userCommand))
 		{
-			user_command = -1;
 
-			cin.clear();
-			cin.ignore();
+			if (cin.eof())
+			{
+				cout << endl << "Р’РІРѕРґ Р·Р°РІРµСЂС€С‘РЅ" << endl;
+				break;
+			}
+
+			system("cls");
+			cin.clear(); // СЃР±СЂРѕСЃРёС‚СЊ С„Р»Р°РіРё РѕС€РёР±РѕРє РїРѕС‚РѕРєР° cin
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); // РѕС‚Р±СЂР°СЃС‹РІР°РµС‚ СЌР»РµРјРµРЅС‚С‹ РґРѕ РґРѕСЃС‚РёР¶РµРЅРёСЏ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР° РёР»Рё РґРѕ СЂР°Р·РґРµР»РёС‚РµР»СЏ
+
+			printHeader();
+			printMenu();
+
+			cout << "РќРµРІРµСЂРЅС‹Р№ РІРІРѕРґ! РљРѕРјР°РЅРґС‹ РІ РІРёРґРµ СЃРёРјРІРѕР»РѕРІ Рё СЃС‚СЂРѕРє - РЅРµ РїРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ." << endl;
+
+			continue;
 		}
+
+		// РЈРґР°Р»СЏРµРј РѕСЃС‚Р°С‚РѕРє СЃС‚СЂРѕРєРё РїРѕСЃР»Рµ С‡РёСЃР»Р°.
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 		system("cls");
 		printHeader();
 		printMenu();
 
-		switch (user_command)
+		switch (userCommand)
 		{
 		case commands::add_new_note:
 			addNewNote(notesList);
@@ -132,13 +154,11 @@ int main()
 			showListNotes(notesList);
 			break;
 		case commands::exit_program:
-			state = state::off;
-			break;
-		case -1:
-			cout << "Неверный ввод! Команды в виде строки - не поддерживаются." << endl;
+			isRunning = false;
 			break;
 		default:
-			cout << "Команда не определена!" << endl;
+			cout << "РљРѕРјР°РЅРґР° РЅРµ РѕРїСЂРµРґРµР»РµРЅР°!" << endl;
+			break;
 		}
 	}
 

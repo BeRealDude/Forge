@@ -8,7 +8,17 @@ project(
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(Forge
-    
- "src/main.cpp")
+    src/main.cpp
+)
+
+if (MSVC)
+    target_compile_options(
+        Forge
+        PRIVATE
+        /source-charset:utf-8
+        /execution-charset:.1251
+    )
+endif()

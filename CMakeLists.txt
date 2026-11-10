@@ -12,7 +12,16 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(Forge
     src/main.cpp
-)
+    src/Note.cpp
+    src/Note.h
+    src/NoteRepository.cpp
+    src/NoteRepository.h
+     src/InputHandle.cpp
+     src/InputHandle.h
+     src/TextUI.cpp
+     src/TextUI.h
+     src/CommandsHandle.cpp
+     src/CommandsHandle.h)
 
 if (MSVC)
     target_compile_options(

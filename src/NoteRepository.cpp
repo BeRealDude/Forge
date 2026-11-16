@@ -4,6 +4,9 @@
 void NoteRepository::Add(const std::string& text)
 {
 	notesList.emplace_back(nextId, text);
+
+	store.Write(nextId, text);
+
 	++nextId;
 }
 

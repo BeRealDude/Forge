@@ -4,6 +4,8 @@
 #include "NoteRepository.h"
 #include "InputHandle.h"
 #include "TextUI.h"
+//#include "NoteFileStorage.h"
+
 
 class CommandsHandle {
 
@@ -15,6 +17,9 @@ private:
 	NoteRepository rep;
 	InputHandle inputHandler;
 	TextUI ui;
+	//NoteFileStorage store;
+
+
 
 	void AddNewNote();
 

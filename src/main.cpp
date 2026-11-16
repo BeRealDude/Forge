@@ -8,8 +8,8 @@
 int main()
 {
 	#ifdef _WIN32
-    SetConsoleCP(1251); // Установить кодировку для ввода
-    SetConsoleOutputCP(1251); // Установить кодировку для вывода
+	SetConsoleCP(CP_UTF8);
+	SetConsoleOutputCP(CP_UTF8);
 	#endif
 
 	CommandsHandle app;

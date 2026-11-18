@@ -4,9 +4,13 @@
 #include <string>
 #include <vector>
 
+#include "NoteFileStorage.h"
+
 class NoteRepository
 {
 public:
+
+	NoteRepository();
 
 	void Add(const std::string& text);
 
@@ -17,6 +21,7 @@ public:
 private:
 	std::vector<Note> notesList;
 	int nextId = 1;
+	NoteFileStorage store;
 
 	std::vector<Note>::iterator FindById(int id);
 };

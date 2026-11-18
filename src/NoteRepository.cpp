@@ -1,9 +1,18 @@
 #include "NoteRepository.h"
 #include <algorithm>
 
+NoteRepository::NoteRepository()
+{
+	store.Read(notesList);
+}
+
 void NoteRepository::Add(const std::string& text)
 {
 	notesList.emplace_back(nextId, text);
+
+
+	store.Write(notesList);
+
 	++nextId;
 }
 

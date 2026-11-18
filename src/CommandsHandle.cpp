@@ -6,7 +6,7 @@ void CommandsHandle::Run()
 
 	bool isRunning = true;
 
-	ui.ClearConsole();
+	//ui.ClearConsole();
 	ui.Print(keysPrint::header);
 	ui.Print(keysPrint::menu);
 
@@ -23,7 +23,7 @@ void CommandsHandle::Run()
 		}
 		else if (status == inputStatus::invalid)
 		{
-			ui.ClearConsole();
+			//ui.ClearConsole();
 			ui.Print(keysPrint::header);
 			ui.Print(keysPrint::menu);
 			ui.Print(keysPrint::incorrectCommand);
@@ -35,7 +35,7 @@ void CommandsHandle::Run()
 			break;
 		}
 
-		ui.ClearConsole();
+		//ui.ClearConsole();
 		ui.Print(keysPrint::header);
 		ui.Print(keysPrint::menu);
 
@@ -71,7 +71,10 @@ void CommandsHandle::AddNewNote()
 	}
 
 	rep.Add(text);
-	ui.ClearConsole();
+
+	//store.Write();
+
+	//ui.ClearConsole();
 	ui.Print(keysPrint::header);
 	ui.Print(keysPrint::menu);
 }

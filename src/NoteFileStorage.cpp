@@ -9,28 +9,14 @@ using json = nlohmann::json;
 
 NoteFileStorage::NoteFileStorage()
 {
-    if (CheckExist())
-    {
-        file.open(fileName, std::ios::in | std::ios::out | std::ios::app);
-
-        if (file.is_open())
-        {
-            std::cout << "Файл открыт!" << std::endl;
-
-            Read();
-        }
-        else
-        {
-            std::cout << "Не удалось открыть файл!" << std::endl;
-        }
-    }
-    else
+    if (!CheckExist())
     {
         file.open(fileName, std::ios::out);
 
         std::cout << "Файл создан!" << std::endl;
-    }
-    
+
+        file.close();
+    }   
 }
 
 bool NoteFileStorage::CheckExist()
@@ -53,21 +39,21 @@ bool NoteFileStorage::CheckEmpty()
     if (std::filesystem::is_empty(fileName)) {
         std::cout << "Файл пуст." << std::endl;
 
-        return false;
+        return true;
     }
     else {
         std::cout << "В файле есть данные." << std::endl;
-        return true;
+        return false;
     }
 }
 
-void NoteFileStorage::Write(int id, std::string text)
+void NoteFileStorage::Write(std::vector<Note>& list)
 {
 
     CheckEmpty();
     //json array();
 
-    json notes;
+    /*json notes;
     json data;
 
     notes["notes"] = json::array();
@@ -82,28 +68,46 @@ void NoteFileStorage::Write(int id, std::string text)
 
     std::cout << "notes:\t" << notes << std::endl;
     std::cout << "data:\t" << data << std::endl;
-    /*std::cout << "jsonString:\t" << data << std::endl;*/
-    //std::cout << "jsonString parse:\t" << data.parse(jsonString)["id"] << std::endl;
+   
 
 
-    file << jsonString;
+    file << jsonString;*/
 }
 
-void NoteFileStorage::Read()
+void NoteFileStorage::Read(std::vector<Note>& list)
 {
-    std::string notes;
+    if (CheckEmpty())
+    {
+        return;
+    }
 
-    file.clear();
-    file.seekg(0, std::ios::beg);
+    file.open(fileName, std::ios::in);
 
-    while(std::getline(file, notes))
-    { 
-        std::cout << notes << '\n';
+    if (file.is_open())
+    {
+        std::cout << "Файл открыт!" << std::endl;
+
+        auto document = nlohmann::json::parse(file);
+
+        for (const auto& note : document["notes"]) {
+            //std::cout << note << "\tnote ";
+
+            list.emplace_back(note["id"], note["text"]);
+        }
+    }
+
+    else
+    {
+        std::cerr << "Не удалось открыть файл!" << std::endl;
     }
 
     file.clear();
 
-    /*file >> notes*/;
+    file.close();
+}
 
-    /*std::cout << notes << '\n';*/
+std::string NoteFileStorage::CreateJson()
+{
+    std::string a{};
+    return a;
 }

@@ -10,6 +10,8 @@ class NoteRepository
 {
 public:
 
+	NoteRepository();
+
 	void Add(const std::string& text);
 
 	const std::vector<Note>& GetAll() const;

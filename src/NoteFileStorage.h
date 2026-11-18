@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <string>
+#include "Note.h" 
 
 
 class NoteFileStorage {
@@ -13,9 +14,11 @@ public:
 
 	bool CheckEmpty();
 
-	void Write(int id, std::string text);
+	void Write(std::vector<Note>& list);
 
-	void Read();
+	void Read(std::vector<Note>& list);
+
+	std::string CreateJson();
 
 private:
 

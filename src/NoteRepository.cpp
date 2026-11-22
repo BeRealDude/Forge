@@ -1,17 +1,17 @@
 #include "NoteRepository.h"
 #include <algorithm>
 
-NoteRepository::NoteRepository()
-{
-	store.Read(notesList);
-}
+//NoteRepository::NoteRepository()
+//{
+//	store.Read(notesList);
+//}
 
 void NoteRepository::Add(const std::string& text)
 {
 	notesList.emplace_back(nextId, text);
 
 
-	store.Write(notesList);
+	//store.Write(notesList);
 
 	++nextId;
 }
@@ -42,4 +42,9 @@ std::vector<Note>::iterator NoteRepository::FindById(int id)
 		{
 			return note.GetId() == id;
 		});
+}
+
+std::vector<Note>& NoteRepository::GetNotesList()
+{
+	return notesList;
 }

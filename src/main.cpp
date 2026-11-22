@@ -12,8 +12,16 @@ int main()
 	SetConsoleOutputCP(CP_UTF8);
 	#endif
 
-	CommandsHandle app;
-	app.Run();	
+	try
+	{
+		CommandsHandle app;
+		app.Run();
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Ошибка Forge: " << e.what() << '\n';
+		return 1;
+	}
 
 	return 0;
 }

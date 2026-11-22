@@ -1,113 +1,86 @@
 #include "NoteFileStorage.h"
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <vector>
+#include <stdexcept>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
 NoteFileStorage::NoteFileStorage()
 {
-    if (!CheckExist())
+    if (!std::filesystem::exists(fileName) || std::filesystem::is_empty(fileName))
     {
-        file.open(fileName, std::ios::out);
-
-        std::cout << "Файл создан!" << std::endl;
-
-        file.close();
-    }   
-}
-
-bool NoteFileStorage::CheckExist()
-{
-    if (std::filesystem::exists(fileName)) {
-        std::cout << "Файл существует." << std::endl;
-
-        return true;
-    }
-    else {
-        std::cout << "Файл не существует." << std::endl;
-
-        return false;
+        Initialize();
     }
 }
 
-bool NoteFileStorage::CheckEmpty()
+void NoteFileStorage::Initialize() const
 {
+    std::ofstream file(fileName);
 
-    if (std::filesystem::is_empty(fileName)) {
-        std::cout << "Файл пуст." << std::endl;
+    if (!file.is_open())
+        throw std::runtime_error("Не удалось создать файл: " + fileName);
 
-        return true;
-    }
-    else {
-        std::cout << "В файле есть данные." << std::endl;
-        return false;
-    }
-}
-
-void NoteFileStorage::Write(std::vector<Note>& list)
-{
-
-    CheckEmpty();
-    //json array();
-
-    /*json notes;
-    json data;
-
+    json notes;
     notes["notes"] = json::array();
 
-
-    data["id"] = id;
-    data["text"] = text;
-
-    notes["notes"].emplace_back(data);
-
-    std::string jsonString = notes.dump(2);
-
-    std::cout << "notes:\t" << notes << std::endl;
-    std::cout << "data:\t" << data << std::endl;
-   
-
-
-    file << jsonString;*/
-}
-
-void NoteFileStorage::Read(std::vector<Note>& list)
-{
-    if (CheckEmpty())
-    {
-        return;
-    }
-
-    file.open(fileName, std::ios::in);
-
-    if (file.is_open())
-    {
-        std::cout << "Файл открыт!" << std::endl;
-
-        auto document = nlohmann::json::parse(file);
-
-        for (const auto& note : document["notes"]) {
-            //std::cout << note << "\tnote ";
-
-            list.emplace_back(note["id"], note["text"]);
-        }
-    }
-
-    else
-    {
-        std::cerr << "Не удалось открыть файл!" << std::endl;
-    }
-
-    file.clear();
+    file << notes.dump(2);
 
     file.close();
+
+    if (!file)
+        throw std::runtime_error("Ошибка записи: " + fileName);
 }
 
-std::string NoteFileStorage::CreateJson()
+void NoteFileStorage::Read(std::vector<Note>& list) const
 {
-    std::string a{};
-    return a;
+    std::ifstream input(fileName);
+
+    if (!input.is_open())
+        throw std::runtime_error("Не удалось открыть файл: " + fileName);
+
+    auto document = nlohmann::json::parse(input);
+
+    if (!document.contains("notes")) {
+        throw std::runtime_error("В файле заметок нет ключа 'notes'");
+    }
+
+    if (!document.at("notes").is_array()) {
+        throw std::runtime_error("В файле заметок нет массива для заметок");
+    }
+
+    for (const auto& note : document.at("notes")) {
+     
+        list.emplace_back(note.at("id"), note.at("text"));
+    }
 }
+
+void NoteFileStorage::Write(const std::vector<Note>& list)
+{
+    
+     //CheckEmpty();
+     //json array();
+
+     /*json notes;
+     json data;
+
+     notes["notes"] = json::array();
+
+
+     data["id"] = id;
+     data["text"] = text;
+
+     notes["notes"].emplace_back(data);
+
+     std::string jsonString = notes.dump(2);
+
+     std::cout << "notes:\t" << notes << std::endl;
+     std::cout << "data:\t" << data << std::endl;
+
+
+
+     file << jsonString;*/
+}
+

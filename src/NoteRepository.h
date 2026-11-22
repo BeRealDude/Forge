@@ -4,24 +4,26 @@
 #include <string>
 #include <vector>
 
-#include "NoteFileStorage.h"
+//#include "NoteFileStorage.h"
 
 class NoteRepository
 {
 public:
 
-	NoteRepository();
+	//NoteRepository();
 
 	void Add(const std::string& text);
 
 	const std::vector<Note>& GetAll() const;
 
 	bool DeleteById(int id);
+	
+	std::vector<Note>& GetNotesList();
 
 private:
 	std::vector<Note> notesList;
 	int nextId = 1;
-	NoteFileStorage store;
+	//NoteFileStorage store;
 
 	std::vector<Note>::iterator FindById(int id);
 };

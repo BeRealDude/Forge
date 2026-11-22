@@ -6,6 +6,8 @@ void CommandsHandle::Run()
 
 	bool isRunning = true;
 
+	LoadNotes();
+
 	//ui.ClearConsole();
 	ui.Print(keysPrint::header);
 	ui.Print(keysPrint::menu);
@@ -58,6 +60,11 @@ void CommandsHandle::Run()
 			break;
 		}
 	}
+}
+
+void CommandsHandle::LoadNotes()
+{
+	store.Read(rep.GetNotesList());
 }
 
 void CommandsHandle::AddNewNote()

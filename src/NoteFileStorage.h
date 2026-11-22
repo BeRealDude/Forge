@@ -1,28 +1,21 @@
 #pragma once
 
-#include <fstream>
+#include <vector>
 #include <string>
 #include "Note.h" 
-
 
 class NoteFileStorage {
 
 public:
 	NoteFileStorage();
 
-	bool CheckExist();
+	void Read(std::vector<Note>& list) const;
 
-	bool CheckEmpty();
-
-	void Write(std::vector<Note>& list);
-
-	void Read(std::vector<Note>& list);
-
-	std::string CreateJson();
+	void Write(const std::vector<Note>& list);
 
 private:
 
-	std::fstream file;
 	std::string fileName = "notes.txt";
 
+	void Initialize() const;
 };

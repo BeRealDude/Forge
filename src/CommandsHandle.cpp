@@ -65,6 +65,8 @@ void CommandsHandle::Run()
 void CommandsHandle::LoadNotes()
 {
 	store.Read(rep.GetNotesList());
+
+	rep.CalculateNextId();
 }
 
 void CommandsHandle::AddNewNote()
@@ -79,7 +81,7 @@ void CommandsHandle::AddNewNote()
 
 	rep.Add(text);
 
-	//store.Write();
+	store.Write(rep.GetAll());
 
 	//ui.ClearConsole();
 	ui.Print(keysPrint::header);

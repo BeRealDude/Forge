@@ -35,8 +35,13 @@ void TextUI::PrintMenu()
 
 void TextUI::PrintNote(const Note& note)
 {
+	const std::chrono::zoned_time localTime{
+		std::chrono::current_zone(),
+		note.GetCreatedAt()
+	};
+
 	std::cout << "Информация о заметке:\n"
-		<< "Время создания: " << note.GetCreatedAt() << '\n'
+		<< "Время создания: " << std::format("{:%d.%m.%Y %H:%M}", localTime) << '\n'
 		<< "id: " << note.GetId() << '\n'
 		<< "Текст: " << note.GetText() << "\n\n";
 }

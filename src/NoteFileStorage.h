@@ -11,7 +11,7 @@ public:
 
 	void Read(std::vector<Note>& list) const;
 
-	void Write(const std::vector<Note>& list);
+	void Write(const std::vector<Note>& list) const;
 
 private:
 

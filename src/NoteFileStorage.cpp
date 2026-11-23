@@ -4,9 +4,12 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <chrono>
+#include <cstdint>
 #include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
+using Clock = std::chrono::system_clock;
 
 NoteFileStorage::NoteFileStorage()
 {
@@ -52,35 +55,48 @@ void NoteFileStorage::Read(std::vector<Note>& list) const
     }
 
     for (const auto& note : document.at("notes")) {
+
+        const int id = note.at("id").get<int>();
+        const auto text = note.at("text").get<std::string>();
+
+        const std::chrono::milliseconds sinceEpoch{
+            note.at("created_at_ms").get<std::int64_t>()
+        };
+
+        const Clock::time_point createdAt{
+            std::chrono::duration_cast<Clock::duration>(sinceEpoch)
+        };
      
-        list.emplace_back(note.at("id"), note.at("text"));
+        list.emplace_back(id, text, createdAt);
     }
 }
 
-void NoteFileStorage::Write(const std::vector<Note>& list)
+void NoteFileStorage::Write(const std::vector<Note>& list) const
 {
-    
-     //CheckEmpty();
-     //json array();
+    std::string tempPath = fileName + ".temp";
+    std::ofstream file(tempPath);
 
-     /*json notes;
-     json data;
+    if (!file.is_open())
+        throw std::runtime_error("Не удалось создать временный файл для записи: " + tempPath);
 
-     notes["notes"] = json::array();
+    json notes;
+    json note;
+    notes["notes"] = json::array();
 
+    for (const Note& item : list)
+    {
+        note["created_at_ms"] = std::chrono::duration_cast<std::chrono::milliseconds>(item.GetCreatedAt().time_since_epoch()).count();
+        note["id"] = item.GetId();
+        note["text"] = item.GetText();
+        notes.at("notes").emplace_back(note);
+    }
 
-     data["id"] = id;
-     data["text"] = text;
+    file << notes.dump(2);
 
-     notes["notes"].emplace_back(data);
+    file.close();
 
-     std::string jsonString = notes.dump(2);
+    if (!file)
+        throw std::runtime_error("Ошибка записи во временный файл: " + tempPath);
 
-     std::cout << "notes:\t" << notes << std::endl;
-     std::cout << "data:\t" << data << std::endl;
-
-
-
-     file << jsonString;*/
+    std::filesystem::rename(tempPath, fileName);
 }
-

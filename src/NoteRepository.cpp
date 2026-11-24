@@ -34,3 +34,22 @@ std::vector<Note>::iterator NoteRepository::FindById(int id)
 			return note.GetId() == id;
 		});
 }
+
+std::vector<Note>& NoteRepository::GetNotesList()
+{
+	return notesList;
+}
+
+void NoteRepository::CalculateNextId()
+{
+	if (notesList.size() == 0) return;
+
+	for (Note& item : notesList)
+	{
+		if (nextId <= item.GetId())
+		{
+			nextId = item.GetId();
+			++nextId;
+		}
+	}
+}

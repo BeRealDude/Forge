@@ -13,6 +13,10 @@ public:
 	const std::vector<Note>& GetAll() const;
 
 	bool DeleteById(int id);
+	
+	std::vector<Note>& GetNotesList();
+
+	void CalculateNextId();
 
 private:
 	std::vector<Note> notesList;

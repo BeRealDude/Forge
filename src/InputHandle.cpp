@@ -6,8 +6,9 @@ inputStatus InputHandle::ReadLine(std::istream& input, std::string& text)
 
 	if (!(std::getline(input, line)))
 	{
-		if (input.eof())
-			return inputStatus::end_of_input;
+		if (input.bad()) return inputStatus::input_error;
+		
+		if (input.eof()) return inputStatus::end_of_input;
 
 		return inputStatus::input_error;
 	}

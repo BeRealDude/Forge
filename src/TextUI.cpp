@@ -13,6 +13,7 @@ void TextUI::Print(const keysPrint& key)
 	case keysPrint::inputError: std::cout << "Не удалось прочитать ввод. Программа будет закрыта\n"; break;
 	case keysPrint::menu: PrintMenu(); break;
 	case keysPrint::header: PrintHeader(); break;
+	case keysPrint::successfulAdd: std::cout << "Заметка добавлена.\n"; break;
 	default: std::cout << "Передан неизвестный тип ошибки\n";
 	};
 }
@@ -35,8 +36,13 @@ void TextUI::PrintMenu()
 
 void TextUI::PrintNote(const Note& note)
 {
+	const std::chrono::zoned_time localTime{
+		std::chrono::current_zone(),
+		note.GetCreatedAt()
+	};
+
 	std::cout << "Информация о заметке:\n"
-		<< "Время создания: " << note.GetCreatedAt() << '\n'
+		<< "Время создания: " << std::format("{:%d.%m.%Y %H:%M}", localTime) << '\n'
 		<< "id: " << note.GetId() << '\n'
 		<< "Текст: " << note.GetText() << "\n\n";
 }

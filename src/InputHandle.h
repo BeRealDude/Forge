@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <sstream>
+#include <iostream>
 
 enum class inputStatus { ok, invalid, end_of_input, input_error };
 
@@ -19,6 +20,8 @@ public:
 
 		if (!(std::getline(input, line)))
 		{
+			if(input.bad()) return inputStatus::input_error;
+		
 			if (input.eof()) return inputStatus::end_of_input;
 
 			return inputStatus::input_error;

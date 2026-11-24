@@ -16,6 +16,7 @@ public:
 private:
 
 	std::string fileName = "notes.txt";
+	std::string tempPath = fileName + ".temp";
 
 	void Initialize() const;
 };

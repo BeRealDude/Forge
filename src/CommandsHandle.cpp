@@ -8,7 +8,7 @@ void CommandsHandle::Run()
 
 	LoadNotes();
 
-	//ui.ClearConsole();
+	ui.ClearConsole();
 	ui.Print(keysPrint::header);
 	ui.Print(keysPrint::menu);
 
@@ -25,7 +25,7 @@ void CommandsHandle::Run()
 		}
 		else if (status == inputStatus::invalid)
 		{
-			//ui.ClearConsole();
+			ui.ClearConsole();
 			ui.Print(keysPrint::header);
 			ui.Print(keysPrint::menu);
 			ui.Print(keysPrint::incorrectCommand);
@@ -37,7 +37,7 @@ void CommandsHandle::Run()
 			break;
 		}
 
-		//ui.ClearConsole();
+		ui.ClearConsole();
 		ui.Print(keysPrint::header);
 		ui.Print(keysPrint::menu);
 
@@ -83,9 +83,10 @@ void CommandsHandle::AddNewNote()
 
 	store.Write(rep.GetAll());
 
-	//ui.ClearConsole();
+	ui.ClearConsole();
 	ui.Print(keysPrint::header);
 	ui.Print(keysPrint::menu);
+	ui.Print(keysPrint::successfulAdd);
 }
 
 void CommandsHandle::ShowListNotes()
@@ -140,9 +141,10 @@ void CommandsHandle::DeleteNote()
 	}
 
 	if (confirm == 'Y' || confirm == 'y')
-	{
+	{	
 		if (rep.DeleteById(id))
 		{
+			store.Write(rep.GetAll());
 			std::cout << "Заметка удалена!" << '\n';
 		}
 		else

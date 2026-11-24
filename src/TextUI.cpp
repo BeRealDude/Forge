@@ -13,6 +13,7 @@ void TextUI::Print(const keysPrint& key)
 	case keysPrint::inputError: std::cout << "Не удалось прочитать ввод. Программа будет закрыта\n"; break;
 	case keysPrint::menu: PrintMenu(); break;
 	case keysPrint::header: PrintHeader(); break;
+	case keysPrint::successfulAdd: std::cout << "Заметка добавлена.\n"; break;
 	default: std::cout << "Передан неизвестный тип ошибки\n";
 	};
 }

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Note.h"
 
-enum class keysPrint { incorrectId, eof, incorrectCommand, commandIsNotDefined, itemWasNotFound, incorrectConfirm, inputError, menu, header };
+enum class keysPrint { incorrectId, eof, incorrectCommand, commandIsNotDefined, itemWasNotFound, incorrectConfirm, inputError, menu, header, successfulAdd };
 
 class TextUI {
 

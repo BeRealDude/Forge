@@ -1,8 +1,6 @@
 #include "NoteFileStorage.h"
 #include <filesystem>
 #include <fstream>
-#include <iostream>
-#include <string>
 #include <stdexcept>
 #include <chrono>
 #include <cstdint>
@@ -73,7 +71,6 @@ void NoteFileStorage::Read(std::vector<Note>& list) const
 
 void NoteFileStorage::Write(const std::vector<Note>& list) const
 {
-    std::string tempPath = fileName + ".temp";
     std::ofstream file(tempPath);
 
     if (!file.is_open())

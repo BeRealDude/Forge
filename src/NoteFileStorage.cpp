@@ -88,7 +88,7 @@ void NoteFileStorage::Write(const std::vector<Note>& list) const
         notes.at("notes").emplace_back(note);
     }
 
-    file << notes.dump(2);
+    file << notes.dump();
 
     file.close();
 
